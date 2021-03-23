@@ -11,10 +11,7 @@ const { Title } = Typography;
 const { Header, Footer, Sider, Content } = Layout;
 const { Search } = Input;
 
-export default function Home() {
-  const URL = "https://api.github.com/repos/walmartlabs/thorax/issues";
-
-  const [retrievedData, setRetrievedData] = useState([]);
+export default function Home({ retrievedData, switchDisplayToIssue }) {
   const [displayData, setDisplayData] = useState([]);
 
   const filterDisplayData = (output) => {
@@ -23,17 +20,32 @@ export default function Home() {
     });
   };
 
+  // When data is set, create a filtered version for display
+  useEffect(() => {
+    setDisplayData(filterDisplayData(retrievedData));
+  }, [retrievedData]);
+
   const displayColumns = [
     {
-      title: "Title",
+      title: "Issue Title",
       dataIndex: "title",
       key: "title",
-      render: (text) => <a>{text}</a>,
+      render: (text) => <p>{text}</p>,
     },
     {
       title: "Issue Number",
       dataIndex: "number",
       key: "number",
+      render: (num) => (
+        <p
+          onClick={(e) => {
+            console.log("hello");
+            switchDisplayToIssue(e, num);
+          }}
+        >
+          {num}
+        </p>
+      ),
     },
     {
       title: "State",
@@ -50,17 +62,6 @@ export default function Home() {
     },
   ];
 
-  // Response is being sliced
-  useEffect(() => {
-    fetch(URL)
-      .then((response) => response.json())
-      .then((output) => setRetrievedData(output));
-  }, []);
-
-  // When data is set, create a filtered version for display
-  useEffect(() => {
-    setDisplayData(filterDisplayData(retrievedData));
-  }, [retrievedData]);
   return (
     <Row>
       <Col span={4}></Col>

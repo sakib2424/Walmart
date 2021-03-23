@@ -8,12 +8,48 @@ import { useState, useEffect } from "react";
 import { Table, Tag } from "antd";
 import { Typography } from "antd";
 import Home from "./components/Home";
+import IssueDisplay from "./components/IssueDisplay";
 
 const { Title } = Typography;
 const { Header, Footer, Sider, Content } = Layout;
 const { Search } = Input;
 
 function App() {
+  const URL = "https://api.github.com/repos/walmartlabs/thorax/issues";
+
+  const [displayHome, setDisplayHome] = useState(true);
+  const [retrievedData, setRetrievedData] = useState([]);
+  const [displayIssueNumber, setDisplayIssueNumber] = useState(null);
+
+  const [issueToDisplay, setIssueToDisplay] = useState(null);
+
+  const switchDisplayToIssue = (event, issueNumber) => {
+    console.log(issueNumber);
+    setDisplayIssueNumber(issueNumber);
+    setDisplayHome(false);
+  };
+
+  const switchDisplayToHome = () => {
+    setDisplayHome(true);
+  };
+
+  // Fetches Data from API
+  useEffect(() => {
+    fetch(URL)
+      .then((response) => response.json())
+      .then((output) => setRetrievedData(output));
+  }, []);
+
+  // Sets the issue to display
+  useEffect(() => {
+    setIssueToDisplay(
+      retrievedData.find((item) => item.number === displayIssueNumber)
+    );
+    console.log(issueToDisplay);
+  }, [displayIssueNumber]);
+
+  console.log(issueToDisplay);
+
   return (
     <div className="App">
       <Layout>
@@ -22,7 +58,17 @@ function App() {
           {/* <CodeOutlined style={{ float: "right", display: "inline-block" }} />  */}
         </Header>
         <Content>
-          <Home></Home>
+          {displayHome ? (
+            <Home
+              retrievedData={retrievedData}
+              switchDisplayToIssue={switchDisplayToIssue}
+            ></Home>
+          ) : (
+            <IssueDisplay
+              issueToDisplay={issueToDisplay}
+              switchDisplayToHome={switchDisplayToHome}
+            ></IssueDisplay>
+          )}
         </Content>
         <Footer></Footer>
       </Layout>
