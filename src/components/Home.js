@@ -1,22 +1,16 @@
-import React from "react";
-import { Row, Col } from "antd";
-import { Layout } from "antd";
-import { Input, Space } from "antd";
-import { AudioOutlined, CodeOutlined } from "@ant-design/icons";
-import { useState, useEffect } from "react";
-import { Table, Tag } from "antd";
-import { Typography } from "antd";
-
-const { Title } = Typography;
-const { Header, Footer, Sider, Content } = Layout;
-const { Search } = Input;
+import { Row, Col, Table, Tag } from "antd";
+import React, { useState, useEffect } from "react";
 
 export default function Home({ retrievedData, switchDisplayToIssue }) {
   const [displayData, setDisplayData] = useState([]);
 
   const filterDisplayData = (output) => {
     return output.map((item) => {
-      return { title: item.title, number: item.number, state: item.state };
+      return {
+        title: [item.title, item.number],
+        number: item.number,
+        state: item.state,
+      };
     });
   };
 
@@ -30,7 +24,17 @@ export default function Home({ retrievedData, switchDisplayToIssue }) {
       title: "Issue Title",
       dataIndex: "title",
       key: "title",
-      render: (text) => <p>{text}</p>,
+      //   render: (text) => <p>{text}</p>
+      render: (text) => (
+        <a
+          onClick={(e) => {
+            console.log("hello");
+            switchDisplayToIssue(e, text[1]);
+          }}
+        >
+          {text[0]}
+        </a>
+      ),
     },
     {
       title: "Issue Number",

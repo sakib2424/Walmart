@@ -1,18 +1,11 @@
-import logo from "./logo.svg";
 import "./App.css";
-import { Row, Col } from "antd";
-import { Layout } from "antd";
-import { Input, Space } from "antd";
-import { AudioOutlined, CodeOutlined } from "@ant-design/icons";
 import { useState, useEffect } from "react";
-import { Table, Tag } from "antd";
-import { Typography } from "antd";
+import { Typography, Layout } from "antd";
 import Home from "./components/Home";
 import IssueDisplay from "./components/IssueDisplay";
 
 const { Title } = Typography;
-const { Header, Footer, Sider, Content } = Layout;
-const { Search } = Input;
+const { Header, Footer, Content } = Layout;
 
 function App() {
   const URL = "https://api.github.com/repos/walmartlabs/thorax/issues";
